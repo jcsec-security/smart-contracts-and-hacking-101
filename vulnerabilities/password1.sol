@@ -12,9 +12,9 @@ contract Password1 {
 
     function amITheOwner(string calldata secret) public view returns(bool) {
         if (keccak256(bytes(passwd)) == keccak256(bytes(secret)) ) {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 

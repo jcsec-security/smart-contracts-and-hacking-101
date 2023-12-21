@@ -12,10 +12,10 @@ contract Password1 {
 
     function amITheOwner(string calldata secret, bytes32 newHash) public returns(bool) {
         if (hashed == keccak256(bytes(secret)) ) {
-            return false;
+            return true;
         } else {
             hashed = newHash;
-            return true;
+            return false;
         }
     }
 
