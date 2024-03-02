@@ -5,7 +5,7 @@ If you are attending my talk about blockchain technology, smart contracts and co
 ## Smart Contracts
 
 First peek into a live smart contract using a block explorer
-- [URL]()
+- [Goerli Etherscan URL](https://goerli.etherscan.io/address/0xd7F07FA527C4eE13717125534A7258fFa60CE6c1)
 
 ## Vulnerabilities
 
