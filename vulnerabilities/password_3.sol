@@ -2,7 +2,7 @@
 pragma solidity ^0.8.2;
 
 
-contract Password1 {
+contract Password3 {
 
     bytes32 private hashed;
 
