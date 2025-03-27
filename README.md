@@ -4,8 +4,13 @@ If you are attending my talk about blockchain technology, smart contracts and co
 
 ## Smart Contracts
 
-First peek into a live smart contract using a block explorer
-- [Goerli Etherscan URL](https://goerli.etherscan.io/address/0xd7F07FA527C4eE13717125534A7258fFa60CE6c1)
+To have your first peek into a smart contract deployed in the Sepolia testnet, check this [Etherscan URL](https://sepolia.etherscan.io/address/0x4747df6e3bc844b21f681dcf0270e9cab51b33a6)
+
+Here you can check:
+- History of transactions directed to the contract
+- Current Ether balance, although the most common ERC20 tokens are also listed
+- Deployed bytecode, and, optionally, the verified code
+- Value of the state variables (storage)
 
 ## Vulnerabilities
 
