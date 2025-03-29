@@ -9,18 +9,18 @@ pragma solidity 0.8.26;
 contract Example5 {
 
     mapping (address depositor => uint256) balance;
-	mapping (address depositor => uint256 n_block) blockstamp;
+	mapping (address depositor => uint256 n_block) latest_deposit;
 	
 
     function deposit() external payable {
         balance[msg.sender] += msg.value;
-		blockstamp[msg.sender] = block.number;
+		latest_deposit[msg.sender] = block.number;
     }
 	
 
 	function withdraw() external {
 		// Check
-		require(blockstamp[msg.sender] - block.number > 10,
+		require(latest_deposit[msg.sender] - block.number > 10,
 			"A cooldown of 10 blocks is required!"
 		);
 
