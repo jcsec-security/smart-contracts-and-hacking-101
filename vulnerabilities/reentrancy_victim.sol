@@ -1,10 +1,11 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.26;
 
 
+///@custom:practice-at https://github.com/jcsec-security/learn-solidity-security
 contract Reentrancy {
 
-    mapping (address => uint256) balance;
+    mapping (address depositor => uint256) balance;
 	
     function deposit() external payable {
         balance[msg.sender] += msg.value;
