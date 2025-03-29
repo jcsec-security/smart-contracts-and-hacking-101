@@ -8,10 +8,8 @@ pragma solidity 0.8.26;
 ///@custom:practice-at https://github.com/jcsec-security/learn-solidity-security
 contract Example5 {
 
-	// Depositor => balance
-    mapping (address => uint256) balance;
-	// Depositor => blockstamp_latest_deposit
-	mapping (address => uint256) blockstamp;
+    mapping (address depositor => uint256) balance;
+	mapping (address depositor => uint256 n_block) blockstamp;
 	
 
     function deposit() external payable {
