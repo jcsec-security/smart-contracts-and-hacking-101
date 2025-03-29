@@ -21,7 +21,7 @@ Here you can check:
     - [Case study 2](./vulnerabilities/password_2.sol)
     - [Case study 3](./vulnerabilities/password_3.sol)
 3) Integer over/underflow:
-    - Play with a basic one [deployed in Sepolia](https://sepolia.etherscan.io/address/0xdf847035247a545d5ba09f3ebdef48786603c65f) - unchhecked, solc 0.7.6
+    - Play with a basic one [deployed in Sepolia](https://sepolia.etherscan.io/address/0xdf847035247a545d5ba09f3ebdef48786603c65f) - unchecked, solc 0.7.6
     - [Cooldown!](./vulnerabilities/cooldown.sol) - checked underflow
 5) Reentrancy:
     - [Victim](./vulnerabilities/reentrancy_victim.sol)
