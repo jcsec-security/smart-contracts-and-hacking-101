@@ -4,7 +4,7 @@ If you are attending my talk about blockchain technology, smart contracts and co
 
 ## Smart Contracts
 
-To have your first peek into a smart contract deployed in the Sepolia testnet, check this [Etherscan URL](https://sepolia.etherscan.io/address/0x4747df6e3bc844b21f681dcf0270e9cab51b33a6)
+To have your first peek into a [basic smart contract](./basics/MyFirstApp.sol) deployed in the Sepolia testnet, check this [Etherscan URL](https://sepolia.etherscan.io/address/0x4747df6e3bc844b21f681dcf0270e9cab51b33a6)
 
 Here you can check:
 - History of transactions directed to the contract
