@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.26;
-
+pragma solidity ^0.8.28;
 
 ///@custom:practice-at https://github.com/jcsec-security/learn-solidity-security
 contract Reentrancy {
@@ -22,7 +21,7 @@ contract Reentrancy {
 	}
 	
 	
-	function userBalance (address user) public view returns (uint256) {
+	function userBalance(address user) public view returns (uint256) {
 		return balance[user];
 	}
 

@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.26;
-
+pragma solidity ^0.8.28;
 
 ///@custom:practice-at https://github.com/jcsec-security/learn-solidity-security
 ///@custom:deployed-at https://sepolia.etherscan.io/address/0x089ad7a4096b73d03b36723313d9e9f7141d4234
 contract Password1 {
+
+    error Unauthorized();
 
     string private passwd;
     string public greeting;
@@ -19,7 +20,7 @@ contract Password1 {
         if (keccak256(bytes(passwd)) == keccak256(bytes(_secret)) ) {
             greeting = _greeting;
         } else {
-            revert("Unauthorized");
+            revert Unauthorized();
         }
     }
 

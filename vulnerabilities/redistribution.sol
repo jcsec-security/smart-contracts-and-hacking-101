@@ -14,8 +14,6 @@ contract PullOverPush {
     address[] members;  
     uint256 public pot;
 
-    constructor() {}
-
     // Checks if there is room for a new participant and that it is not already in the list
     modifier newParticipant() {
         require (members.length < BATCH, "The list is full!");

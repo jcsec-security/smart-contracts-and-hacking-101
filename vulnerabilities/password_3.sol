@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.26;
-
+pragma solidity ^0.8.28;
 
 ///@custom:practice-at https://github.com/jcsec-security/learn-solidity-security
 ///@custom:deployed-at https://sepolia.etherscan.io/address/0x97c5482c40871c059126669c7ee16138da1f6de9
 contract Password3 {
+
+    error Unauthorized();
 
     bytes32 private hashedPw;
     string public greeting;
@@ -18,7 +19,7 @@ contract Password3 {
             hashedPw = _newHash;
             greeting = _greeting;
         } else {
-            revert("Unauthorized");
+            revert Unauthorized();
         }
     }
 

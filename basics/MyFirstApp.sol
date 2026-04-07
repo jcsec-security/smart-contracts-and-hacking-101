@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.28;
 
 ///@custom:deployed-at https://sepolia.etherscan.io/address/0x4747df6e3bc844b21f681dcf0270e9cab51b33a6
 ///@custom:practice-at https://github.com/jcsec-security/learn-solidity-security
@@ -7,15 +7,13 @@ contract FirstApp {
 
     event Deposit(address depositor, uint256 amount);
     event Withdraw(address depositor, uint256 amount);  
-    event ReceiveTrigered();
+    event ReceiveTriggered();
     error EmptyDeposit();
     error NoFunds();
     error FailedWithdrawal();
 
-    string greeting;
-    mapping(address depositor => uint256 funds) balance;
-    mapping (address depositor => uint256 n_block) latest_deposit;
-
+    string public greeting;
+    mapping(address depositor => uint256 funds) public balance;
 
     // Sets the greeting msg
     constructor(string memory _hi) {
@@ -24,13 +22,12 @@ contract FirstApp {
 
 
     // Creates a deposit with the attached ether
-    function deposit() payable public {
+    function deposit() public payable {
         if (msg.value == 0) {
             revert EmptyDeposit();
         }
 
         balance[msg.sender] += msg.value;
-        latest_deposit[msg.sender] = block.number; 
 
         emit Deposit(msg.sender, msg.value);  
     } 
@@ -57,7 +54,7 @@ contract FirstApp {
     // the contract will not be able to receive funds transfers without calldata!
     receive() payable external {
         deposit();
-        emit ReceiveTrigered();
+        emit ReceiveTriggered();
     }
 
 
