@@ -9,7 +9,7 @@ uint256 constant BATCH = 5;
     @custom:deployed-at INSERT ETHERSCAN URL
     @custom:practice-at https://github.com/jcsec-security/learn-solidity-security    
  */
-contract PullOverPush is Ownable {
+contract PullOverPush {
 
     address[] members;  
     uint256 public pot;
