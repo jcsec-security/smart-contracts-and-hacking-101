@@ -35,9 +35,7 @@ contract FirstApp {
 
     // Withdraw user funds
     function withdraw() external returns(uint256 amount) {
-        if (balance[msg.sender] == 0) {
-            revert NoFunds();
-        }
+        if (balance[msg.sender] == 0) revert NoFunds();
 
         amount = balance[msg.sender];
         balance[msg.sender] = 0; 

@@ -1,50 +1,281 @@
-// SPDX-License-Identifier: GPL-3.0
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
-uint256 constant BATCH = 5;
-
 /**
-    @notice This contract allows a total of `BATCH` participants enlist for equal funds
-    distribution. 
-    @custom:deployed-at https://sepolia.etherscan.io/address/0x922844355BeABB8fD8D865f2c498906a13Cd4541
-    @custom:practice-at https://github.com/jcsec-security/learn-solidity-security    
+ * @title PullOverPush
+ * @notice Allows exactly `BATCH` participants to enlist for an equal share of
+ *         the accumulated pot. Intentionally demonstrates a Denial-of-Service
+ *         vulnerability caused by the push payment pattern.
+ * @dev    After `retrieveAllPush` is called the contract becomes permanently
+ *         inoperable — members and the isMember mapping are never reset.
+ *         This is intentional: students are invited to identify the issue.
+ * @custom:deployed-at https://sepolia.etherscan.io/address/0x922844355BeABB8fD8D865f2c498906a13Cd4541
+ * @custom:practice-at https://github.com/jcsec-security/learn-solidity-security
  */
 contract PullOverPush {
 
-    address[] members;  
+    // -------------------------------------------------------------------------
+    // Events
+    // -------------------------------------------------------------------------
+
+    /// @notice Emitted when a new address joins the participant list.
+    /// @param member The address that just enrolled.
+    event NewMember(address indexed member);
+
+    /// @notice Emitted when ETH is added to the pot via `receive`.
+    /// @param amount The amount of wei received.
+    event PotIncreased(uint256 amount);
+
+    /// @notice Emitted after the pot has been distributed to all members.
+    /// @param amount The total wei that was distributed.
+    event PotDistributed(uint256 amount);
+
+    // -------------------------------------------------------------------------
+    // Errors
+    // -------------------------------------------------------------------------
+
+    /// @notice Thrown when an address that is already a member calls `participate`.
+    error AlreadyJoined();
+
+    /// @notice Thrown when `participate` is called but the member list is full.
+    error ListIsFull();
+
+    /// @notice Thrown when `retrieveAllPush` is called before `BATCH` members have joined.
+    error WaitingForParticipants();
+
+    /// @notice Thrown when an ETH transfer to one of the members fails.
+    /// @dev    This is the root cause of the DoS: one failing recipient blocks everyone.
+    error TransferFailed();
+
+    /// @notice Thrown when the amount sent to `receive` is not divisible by `BATCH`.
+    error AmountNotDivisible();
+
+    /// @notice Thrown when a zero-value transfer is attempted via `receive`.
+    error ZeroTransfer();
+
+    // -------------------------------------------------------------------------
+    // State
+    // -------------------------------------------------------------------------
+
+    /// @notice The fixed number of participants required before distribution.
+    uint256 constant BATCH = 5;
+
+    /// @notice Ordered list of enrolled participant addresses.
+    address[] public members;
+
+    /// @notice Quick membership lookup; true if the address has already enrolled.
+    mapping(address => bool) public isMember;
+
+    /// @notice Total wei currently held and pending distribution.
     uint256 public pot;
 
-    // Checks if there is room for a new participant and that it is not already in the list
-    modifier newParticipant() {
-        require (members.length < BATCH, "The list is full!");
-        for (uint256 i; i < members.length; i++) {
-            if (members[i] == msg.sender) revert("Already a participant!");
-        }
+    // -------------------------------------------------------------------------
+    // Modifiers
+    // -------------------------------------------------------------------------
+
+    /// @dev Reverts if the list is already full or if the caller is already a member.
+    modifier canJoin() {
+        require(members.length < BATCH, ListIsFull());
+        require(!isMember[msg.sender], AlreadyJoined());
         _;
     }
 
-    // Checks if the participation is closed
-    modifier participationClosed() {
-        require (members.length == BATCH, "Waiting for additional participants...");
+    /// @dev Reverts if fewer than `BATCH` members have enrolled.
+    modifier membersReady() {
+        require(members.length == BATCH, WaitingForParticipants());
         _;
     }
 
+    // -------------------------------------------------------------------------
+    // Functions
+    // -------------------------------------------------------------------------
+
+    /**
+     * @notice Fund the pot. The sent amount must be divisible by `BATCH` so
+     *         that each participant receives a whole number of wei.
+     * @dev    Emits {PotIncreased}. Reverts with {ZeroTransfer} or
+     *         {AmountNotDivisible} on invalid input.
+     */
     receive() external payable {
-        require(msg.value > 0, "Zero transfer not allowed");
-        require(msg.value % BATCH == 0, "You should add at least 1 wei per participant");
+        require(msg.value > 0, ZeroTransfer());
+        require(msg.value % BATCH == 0, AmountNotDivisible());
 
         pot += msg.value;
+        emit PotIncreased(msg.value);
     }
 
-    // Enroll your own address into the re-distribution
-    function participate() external newParticipant {
+    /**
+     * @notice Enroll the caller as a participant in the redistribution.
+     * @dev    Emits {NewMember}. Protected by the `canJoin` modifier.
+     */
+    function participate() external canJoin {
         members.push(msg.sender);
+        isMember[msg.sender] = true;
+        emit NewMember(msg.sender);
     }
 
-    // Anyone can force the "push" of all the members
-    function retrieveAllPush() external participationClosed {
+    /**
+     * @notice Push each participant's share of the pot to their address.
+     * @dev    ⚠️  INTENTIONALLY VULNERABLE — DoS via push pattern.
+     *         If any member's `receive` or fallback reverts, the `require`
+     *         on the next line causes the entire transaction to revert,
+     *         permanently locking the pot.
+     *         Emits {PotDistributed}. Protected by the `membersReady` modifier.
+     */
+    function retrieveAllPush() external membersReady {
         for (uint256 i; i < members.length; i++) {
+            // @audit-issue DoS: a single revert here bricks the entire distribution.
             (bool success, ) = payable(members[i]).call{value: pot / BATCH}("");
-            require(success, "Transfer failed.");         }
+            require(success, TransferFailed());
+        }
+        emit PotDistributed(pot);
+        pot = 0;
+    }
+
+    /**
+     * @notice Returns whether `_member` is enrolled.
+     * @dev    Convenience wrapper around the public `isMember` mapping.
+     * @param  _member The address to look up.
+     * @return True if `_member` has enrolled, false otherwise.
+     */
+    function checkIsMember(address _member) public view returns (bool) {
+        return isMember[_member];
+    }
+}
+pragma solidity ^0.8.28;
+
+/// @notice The fixed number of participants required before distribution.
+uint256 constant BATCH = 5;
+
+/**
+ * @title PullOverPush
+ * @notice Allows exactly `BATCH` participants to enlist for an equal share of
+ *         the accumulated pot.
+ * @dev    After `retrieveAllPush` is called the contract becomes permanently
+ *         inoperable — members and the isMember mapping are never reset.
+ * @custom:deployed-at https://sepolia.etherscan.io/address/0x922844355BeABB8fD8D865f2c498906a13Cd4541
+ * @custom:practice-at https://github.com/jcsec-security/learn-solidity-security
+ */
+contract PullOverPush {
+
+    // -------------------------------------------------------------------------
+    // Events
+    // -------------------------------------------------------------------------
+
+    /// @notice Emitted when a new address joins the participant list.
+    /// @param member The address that just enrolled.
+    event NewMember(address indexed member);
+
+    /// @notice Emitted when ETH is added to the pot via `receive`.
+    /// @param amount The amount of wei received.
+    event PotIncreased(uint256 amount);
+
+    /// @notice Emitted after the pot has been distributed to all members.
+    /// @param amount The total wei that was distributed.
+    event PotDistributed(uint256 amount);
+
+    // -------------------------------------------------------------------------
+    // Errors
+    // -------------------------------------------------------------------------
+
+    /// @notice Thrown when an address that is already a member calls `participate`.
+    error AlreadyJoined();
+
+    /// @notice Thrown when `participate` is called but the member list is full.
+    error ListIsFull();
+
+    /// @notice Thrown when `retrieveAllPush` is called before `BATCH` members have joined.
+    error WaitingForParticipants();
+
+    /// @notice Thrown when an ETH transfer to one of the members fails.
+    /// @dev    This is the root cause of the DoS: one failing recipient blocks everyone.
+    error TransferFailed();
+
+    /// @notice Thrown when the amount sent to `receive` is not divisible by `BATCH`.
+    error AmountNotDivisible();
+
+    /// @notice Thrown when a zero-value transfer is attempted via `receive`.
+    error ZeroTransfer();
+
+    // -------------------------------------------------------------------------
+    // State
+    // -------------------------------------------------------------------------
+
+    /// @notice Ordered list of enrolled participant addresses.
+    address[] public members;
+
+    /// @notice Quick membership lookup; true if the address has already enrolled.
+    mapping(address => bool) public isMember;
+
+    /// @notice Total wei currently held and pending distribution.
+    uint256 public pot;
+
+    // -------------------------------------------------------------------------
+    // Modifiers
+    // -------------------------------------------------------------------------
+
+    /// @dev Reverts if the list is already full or if the caller is already a member.
+    modifier canJoin() {
+        require(members.length < BATCH, ListIsFull());
+        require(!isMember[msg.sender], AlreadyJoined());
+        _;
+    }
+
+    /// @dev Reverts if fewer than `BATCH` members have enrolled.
+    modifier membersReady() {
+        require(members.length == BATCH, WaitingForParticipants());
+        _;
+    }
+
+    // -------------------------------------------------------------------------
+    // Functions
+    // -------------------------------------------------------------------------
+
+    /**
+     * @notice Fund the pot. The sent amount must be divisible by `BATCH` so
+     *         that each participant receives a whole number of wei.
+     * @dev    Emits {PotIncreased}. Reverts with {ZeroTransfer} or
+     *         {AmountNotDivisible} on invalid input.
+     */
+    receive() external payable {
+        require(msg.value > 0, ZeroTransfer());
+        require(msg.value % BATCH == 0, AmountNotDivisible());
+
+        pot += msg.value;
+        emit PotIncreased(msg.value);
+    }
+
+    /**
+     * @notice Enroll the caller as a participant in the redistribution.
+     * @dev    Emits {NewMember}. Protected by the `canJoin` modifier.
+     */
+    function participate() external canJoin {
+        members.push(msg.sender);
+        isMember[msg.sender] = true;
+        emit NewMember(msg.sender);
+    }
+
+    /**
+     * @notice Push each participant's share of the pot to their address.
+     * @dev    Emits {PotDistributed}. Protected by the `membersReady` modifier.
+     */
+    function retrieveAllPush() external membersReady {
+        for (uint256 i; i < members.length; i++) {
+            // @audit-issue DoS: a single revert here bricks the entire distribution.
+            (bool success, ) = payable(members[i]).call{value: pot / BATCH}("");
+            require(success, TransferFailed());
+        }
+        emit PotDistributed(pot);
+        pot = 0;
+    }
+
+    /**
+     * @notice Returns whether `_member` is enrolled.
+     * @dev    Convenience wrapper around the public `isMember` mapping.
+     * @param  _member The address to look up.
+     * @return True if `_member` has enrolled, false otherwise.
+     */
+    function checkIsMember(address _member) public view returns (bool) {
+        return isMember[_member];
     }
 }
