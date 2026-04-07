@@ -6,7 +6,7 @@ uint256 constant BATCH = 5;
 /**
     @notice This contract allows a total of `BATCH` participants enlist for equal funds
     distribution. 
-    @custom:deployed-at INSERT ETHERSCAN URL
+    @custom:deployed-at https://sepolia.etherscan.io/address/0x922844355BeABB8fD8D865f2c498906a13Cd4541
     @custom:practice-at https://github.com/jcsec-security/learn-solidity-security    
  */
 contract PullOverPush {
