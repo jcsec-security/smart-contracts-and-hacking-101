@@ -24,7 +24,7 @@ Here you can check:
     - Play with a basic one [deployed in Sepolia](https://sepolia.etherscan.io/address/0xdf847035247a545d5ba09f3ebdef48786603c65f) - unchecked, solc 0.7.6
     - [Cooldown!](src/Cooldown.sol) - checked underflow
 4) Pull over push:
-    - [Funds redistribution](src/Redistributor.sol)
+    - [Funds redistribution](src/Redistribution.sol)
 5) Reentrancy:
     - [Victim](src/Reentrancy_victim.sol)
     - [Attacker template](src/Reentrancy_attacker.sol)
