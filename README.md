@@ -4,7 +4,7 @@ If you are attending my talk about blockchain technology, smart contracts and co
 
 ## Smart Contracts
 
-To have your first peek into a [basic smart contract](./basics/MyFirstApp.sol) deployed in the Sepolia testnet, check this [Etherscan URL](https://sepolia.etherscan.io/address/0x4747df6e3bc844b21f681dcf0270e9cab51b33a6)
+To have your first peek into a [basic smart contract](src/MyFirstApp.sol) deployed in the Sepolia testnet, check this [Etherscan URL](https://sepolia.etherscan.io/address/0x4747df6e3bc844b21f681dcf0270e9cab51b33a6)
 
 Here you can check:
 - History of transactions directed to the contract
@@ -15,16 +15,16 @@ Here you can check:
 ## Vulnerabilities
 
 1) Front-running: 
-    - [Crack the hash challenge](./vulnerabilities/crack_the_hash.sol)
+    - [Crack the hash challenge](src/Crack_the_hash.sol)
 2) Clear-text secrets:
-    - [Case study 1](./vulnerabilities/password_1.sol)
-    - [Case study 2](./vulnerabilities/password_2.sol)
-    - [Case study 3](./vulnerabilities/password_3.sol)
+    - [Case study 1](src/Password_1.sol)
+    - [Case study 2](src/Password_2.sol)
+    - [Case study 3](src/Password_3.sol)
 3) Integer over/underflow:
     - Play with a basic one [deployed in Sepolia](https://sepolia.etherscan.io/address/0xdf847035247a545d5ba09f3ebdef48786603c65f) - unchecked, solc 0.7.6
-    - [Cooldown!](./vulnerabilities/cooldown.sol) - checked underflow
+    - [Cooldown!](src/Cooldown.sol) - checked underflow
 4) Pull over push:
-    - [Funds redistribution](./vulnerabilities/redistributor.sol)
+    - [Funds redistribution](src/Redistributor.sol)
 5) Reentrancy:
-    - [Victim](./vulnerabilities/reentrancy_victim.sol)
-    - [Attacker template](./vulnerabilities/reentrancy_attacker.sol)
+    - [Victim](src/Reentrancy_victim.sol)
+    - [Attacker template](src/Reentrancy_attacker.sol)

@@ -1,0 +1,9 @@
+# Foundry build artifacts
+out/
+cache/
+
+# Broadcast logs (scripts)
+broadcast/
+
+# Environment variables
+.env
