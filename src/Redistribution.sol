@@ -6,7 +6,7 @@ pragma solidity ^0.8.28;
  *         the accumulated pot.
  * @dev    After `retrieveAllPush` is called the contract becomes permanently
  *         inoperable — members and the isMember mapping are never reset.
- * @custom:deployed-at https://sepolia.etherscan.io/address/0x922844355BeABB8fD8D865f2c498906a13Cd4541
+ * @custom:deployed-at https://sepolia.etherscan.io/address/0x5EB4202694DD91546f3Dbc6c0Ee37eC2aEfa3E6E
  * @custom:practice-at https://github.com/jcsec-security/learn-solidity-security
  */
 contract PullOverPush {

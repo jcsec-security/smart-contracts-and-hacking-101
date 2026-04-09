@@ -4,7 +4,7 @@ pragma solidity ^0.8.28;
 /**
  * @title  Password2
  * @notice Stores a keccak256 hash of the password instead of the plaintext.
- * @custom:deployed-at https://sepolia.etherscan.io/address/0x2cd375913249700a36975f55dcca58ae1d7f258a
+ * @custom:deployed-at https://sepolia.etherscan.io/address/0x77C8d20709A28Ce4fbE5f67c95804492DB1CF8Be
  * @custom:practice-at https://github.com/jcsec-security/learn-solidity-security
  */
 contract Password2 {

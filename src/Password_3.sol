@@ -5,7 +5,7 @@ pragma solidity ^0.8.28;
  * @title  Password3
  * @notice Extends Password2 by allowing the password hash to be rotated on each
  *         successful setGreeting call.
- * @custom:deployed-at https://sepolia.etherscan.io/address/0x97c5482c40871c059126669c7ee16138da1f6de9
+ * @custom:deployed-at https://sepolia.etherscan.io/address/0x5023dA798a1bAa56D2152b6c85d7816Ef0133164
  * @custom:practice-at https://github.com/jcsec-security/learn-solidity-security
  */
 contract Password3 {

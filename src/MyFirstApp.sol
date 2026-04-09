@@ -4,7 +4,7 @@ pragma solidity ^0.8.28;
 /**
  * @title  FirstApp
  * @notice A basic deposit/withdraw contract for teaching Solidity fundamentals.
- * @custom:deployed-at https://sepolia.etherscan.io/address/0x4747df6e3bc844b21f681dcf0270e9cab51b33a6
+ * @custom:deployed-at https://sepolia.etherscan.io/address/0x39ec8aF720E28b5D71ecba56190722E6F9e959FB
  * @custom:practice-at https://github.com/jcsec-security/learn-solidity-security
  */
 contract FirstApp {

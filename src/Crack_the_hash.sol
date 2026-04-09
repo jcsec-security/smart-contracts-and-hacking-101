@@ -6,6 +6,7 @@ pragma solidity ^0.8.28;
  * @notice Demonstrates a front-running vulnerability: the operator posts a goal
  *         string, participants race to submit it, and the winner claims the ETH
  *         prize pool.
+* @custom:deployed-at https://sepolia.etherscan.io/address/0x87F6564D9c065b5f20be57257727F86c7c10d61A
  * @custom:practice-at https://github.com/jcsec-security/learn-solidity-security
  */
 contract CrackTheHashChallenge {

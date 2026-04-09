@@ -5,7 +5,7 @@ pragma solidity ^0.8.28;
  * @title  Password1
  * @notice Demonstrates that private storage variables are NOT secret on a
  *         public blockchain.
- * @custom:deployed-at https://sepolia.etherscan.io/address/0x089ad7a4096b73d03b36723313d9e9f7141d4234
+ * @custom:deployed-at https://sepolia.etherscan.io/address/0xb3095965bC50A75479BDd66C155B00e04f9Bf39A
  * @custom:practice-at https://github.com/jcsec-security/learn-solidity-security
  */
 contract Password1 {
